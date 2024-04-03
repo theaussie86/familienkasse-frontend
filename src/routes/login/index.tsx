@@ -1,7 +1,9 @@
 import { useAuth } from "../../components/hooks/auth";
+import { Navigate } from "react-router-dom";
 
 export default function Login() {
   const { signIn, user } = useAuth();
+
   const handleLoginWithGoogle = async () => {
     try {
       signIn();
@@ -10,7 +12,8 @@ export default function Login() {
     }
   };
 
-  console.log(user);
+  if (user) return <Navigate to="/" />;
+
   return (
     <>
       <div className="flex min-h-full flex-1 flex-col justify-center py-12 sm:px-6 lg:px-8">

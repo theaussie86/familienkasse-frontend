@@ -11,6 +11,7 @@ import {
   onAuthStateChanged,
   GoogleAuthProvider,
   signInWithPopup,
+  signOut,
   UserCredential,
 } from "firebase/auth";
 
@@ -28,6 +29,7 @@ export type AuthContext = {
   loading: boolean;
   setLoading: (loading: boolean) => void;
   signIn: () => void;
+  logOut: () => void;
 };
 
 export const AuthContext = createContext<AuthContext | undefined>(undefined);
@@ -46,6 +48,15 @@ const AuthProvider: FC<PropsWithChildren> = ({ children }) => {
     }
   };
 
+  const logOut = async () => {
+    try {
+      await signOut(auth);
+      setUser(null);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       setUser(user);
@@ -57,7 +68,7 @@ const AuthProvider: FC<PropsWithChildren> = ({ children }) => {
 
   return (
     <AuthContext.Provider
-      value={{ user, setUser, loading, setLoading, signIn }}
+      value={{ user, setUser, loading, setLoading, signIn, logOut }}
     >
       {children}
     </AuthContext.Provider>
