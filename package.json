@@ -6,8 +6,6 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
-    "build:image": "docker build -t europe-west3-docker.pkg.dev/weissteiner-familienkasse/frontend/react-nginx:$npm_package_version .",
-    "push:image": "docker push europe-west3-docker.pkg.dev/weissteiner-familienkasse/frontend/react-nginx:$npm_package_version",
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview"
   },
