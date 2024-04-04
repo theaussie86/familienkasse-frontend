@@ -1,4 +1,5 @@
 FROM node:18.3.0-alpine3.15 as build
+ENV VITE_REST_API_URL=https://familienkasse-backend-fajqibpcza-ey.a.run.app
 WORKDIR /app
 COPY package.json .
 RUN npm install

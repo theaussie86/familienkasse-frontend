@@ -1,8 +1,21 @@
+import { useQuery } from "@tanstack/react-query";
 import { useAuth } from "../../components/hooks/auth";
 import { Navigate } from "react-router-dom";
 
+async function fetchCheckMessage() {
+  const res = await fetch(`${import.meta.env.VITE_REST_API_URL}`);
+  const data = await res.text();
+  return data;
+}
+
 export default function Login() {
   const { signIn, user } = useAuth();
+  const { data } = useQuery({
+    queryKey: ["checkMessage"],
+    queryFn: fetchCheckMessage,
+  });
+
+  console.log(data);
 
   const handleLoginWithGoogle = async () => {
     try {
