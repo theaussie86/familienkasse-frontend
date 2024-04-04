@@ -30,12 +30,14 @@ export type AuthContext = {
   setLoading: (loading: boolean) => void;
   signIn: () => void;
   logOut: () => void;
+  idToken: string | null;
 };
 
 export const AuthContext = createContext<AuthContext | undefined>(undefined);
 
 const AuthProvider: FC<PropsWithChildren> = ({ children }) => {
   const [user, setUser] = useState<UserCredential["user"] | null>(null);
+  const [idToken, setIdToken] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
 
   const signIn = async () => {
@@ -60,6 +62,12 @@ const AuthProvider: FC<PropsWithChildren> = ({ children }) => {
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       setUser(user);
+
+      if (user) {
+        user.getIdToken().then((idToken) => {
+          setIdToken(idToken);
+        });
+      }
       setLoading(false);
     });
 
@@ -68,7 +76,7 @@ const AuthProvider: FC<PropsWithChildren> = ({ children }) => {
 
   return (
     <AuthContext.Provider
-      value={{ user, setUser, loading, setLoading, signIn, logOut }}
+      value={{ user, setUser, loading, setLoading, signIn, logOut, idToken }}
     >
       {children}
     </AuthContext.Provider>
