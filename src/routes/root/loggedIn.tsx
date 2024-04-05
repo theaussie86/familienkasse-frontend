@@ -4,8 +4,8 @@ import { Bars3Icon, BellIcon, XMarkIcon } from "@heroicons/react/24/outline";
 import { classNames } from "../../util";
 import { useAuth } from "../../components/hooks/auth";
 import { Navigate } from "react-router-dom";
-import { fetchCheckMessage } from "../login";
 import { useQuery } from "@tanstack/react-query";
+import { fetchCheckMessage } from "../../actions";
 
 const navigation = [
   { name: "Dashboard", href: "#", current: true },

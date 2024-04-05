@@ -1,29 +1,8 @@
-import { useQuery } from "@tanstack/react-query";
 import { useAuth } from "../../components/hooks/auth";
 import { Navigate } from "react-router-dom";
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export async function fetchCheckMessage(params: any) {
-  try {
-    const res = await fetch(`${import.meta.env.VITE_REST_API_URL}/`, {
-      headers: { Authorization: `Bearer ${params.meta.token}` },
-    });
-    const data = await res.text();
-    return data;
-  } catch (error) {
-    throw new Error("Failed to fetch message");
-  }
-}
-
 export default function Login() {
   const { signIn, user } = useAuth();
-  const { data } = useQuery({
-    queryKey: ["checkMessage"],
-    queryFn: fetchCheckMessage,
-    meta: { token: user?.getIdToken() },
-  });
-
-  console.log(data);
 
   const handleLoginWithGoogle = async () => {
     try {
