@@ -1,8 +1,9 @@
 import { useAuth } from "../../components/hooks/auth";
-import { Navigate } from "react-router-dom";
+import { Navigate, useLocation } from "react-router-dom";
 
 export default function Login() {
   const { signIn, user } = useAuth();
+  const location = useLocation();
 
   const handleLoginWithGoogle = async () => {
     try {
@@ -12,7 +13,7 @@ export default function Login() {
     }
   };
 
-  if (user) return <Navigate to="/" />;
+  if (user) return <Navigate to={location.state.prevRoute ?? "/"} />;
 
   return (
     <>

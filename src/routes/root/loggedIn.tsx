@@ -12,7 +12,8 @@ export default function LoggedInLayout() {
   const loc = useLocation();
 
   const userNavigation = [{ name: "Ausloggen", onClick: () => logOut() }];
-  if (!user) return <Navigate to="/login" />;
+  if (!user)
+    return <Navigate to="/login" state={{ prevRoute: loc.pathname }} />;
 
   return (
     <>
