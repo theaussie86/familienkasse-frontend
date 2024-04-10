@@ -3,7 +3,7 @@ import { Disclosure, Menu, Transition } from "@headlessui/react";
 import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
 import { classNames } from "../../util";
 import { useAuth } from "../../components/hooks/auth";
-import { Link, Navigate, useLocation } from "react-router-dom";
+import { Link, Navigate, Outlet, useLocation } from "react-router-dom";
 
 const navigation = [{ name: "Dashboard", href: "/" }];
 
@@ -195,7 +195,7 @@ export default function LoggedInLayout() {
         <main className="-mt-32">
           <div className="mx-auto max-w-7xl px-4 pb-12 sm:px-6 lg:px-8">
             <div className="rounded-lg bg-white px-5 py-6 shadow sm:px-6">
-              {/* Your content */}
+              <Outlet />
             </div>
           </div>
         </main>
