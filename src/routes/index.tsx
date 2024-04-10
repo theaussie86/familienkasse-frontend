@@ -1,7 +1,8 @@
-import { Link, createBrowserRouter } from "react-router-dom";
+import { createBrowserRouter } from "react-router-dom";
 import LoggedInLayout from "./root/loggedIn";
 import Login from "./login";
 import NotFoundPage from "./404";
+import HomePage from "./home";
 
 export const router = createBrowserRouter([
   {
@@ -10,12 +11,7 @@ export const router = createBrowserRouter([
     children: [
       {
         index: true,
-        element: (
-          <div>
-            Dashboard
-            <Link to="/details">Details</Link>
-          </div>
-        ),
+        element: <HomePage />,
       },
       {
         path: "details",
