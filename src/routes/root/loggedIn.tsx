@@ -1,20 +1,18 @@
 import { Fragment } from "react";
 import { Disclosure, Menu, Transition } from "@headlessui/react";
-import { Bars3Icon, BellIcon, XMarkIcon } from "@heroicons/react/24/outline";
+import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
 import { classNames } from "../../util";
 import { useAuth } from "../../components/hooks/auth";
-import { Navigate, useLocation } from "react-router-dom";
+import { Link, Navigate, useLocation } from "react-router-dom";
 
-const navigation = [{ name: "Dashboard", href: "#", path: "/" }];
+const navigation = [{ name: "Dashboard", href: "/" }];
 
 export default function LoggedInLayout() {
   const { user, logOut } = useAuth();
   const loc = useLocation();
-  console.log(loc);
 
   const userNavigation = [{ name: "Ausloggen", onClick: () => logOut() }];
   if (!user) return <Navigate to="/login" />;
-  console.log(user);
 
   return (
     <>
@@ -30,45 +28,36 @@ export default function LoggedInLayout() {
                         <div className="flex-shrink-0">
                           <img
                             className="h-8 w-8"
-                            src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=500"
+                            src="piggy_bank_favicon.ico"
                             alt="Your Company"
                           />
                         </div>
                         <div className="hidden md:block">
                           <div className="ml-10 flex items-baseline space-x-4">
                             {navigation.map((item) => (
-                              <a
+                              <Link
                                 key={item.name}
-                                href={item.href}
+                                to={item.href}
                                 className={classNames(
-                                  item.path === loc.pathname
+                                  item.href === loc.pathname
                                     ? "bg-gray-900 text-white"
                                     : "text-gray-300 hover:bg-gray-700 hover:text-white",
                                   "rounded-md px-3 py-2 text-sm font-medium"
                                 )}
                                 aria-current={
-                                  item.path === loc.pathname
+                                  item.href === loc.pathname
                                     ? "page"
                                     : undefined
                                 }
                               >
                                 {item.name}
-                              </a>
+                              </Link>
                             ))}
                           </div>
                         </div>
                       </div>
                       <div className="hidden md:block">
                         <div className="ml-4 flex items-center md:ml-6">
-                          <button
-                            type="button"
-                            className="relative rounded-full bg-gray-800 p-1 text-gray-400 hover:text-white focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800"
-                          >
-                            <span className="absolute -inset-1.5" />
-                            <span className="sr-only">View notifications</span>
-                            <BellIcon className="h-6 w-6" aria-hidden="true" />
-                          </button>
-
                           {/* Profile dropdown */}
                           <Menu as="div" className="relative ml-3">
                             <div>
@@ -144,13 +133,13 @@ export default function LoggedInLayout() {
                         as="a"
                         href={item.href}
                         className={classNames(
-                          item.path === loc.pathname
+                          item.href === loc.pathname
                             ? "bg-gray-900 text-white"
                             : "text-gray-300 hover:bg-gray-700 hover:text-white",
                           "block rounded-md px-3 py-2 text-base font-medium"
                         )}
                         aria-current={
-                          item.path === loc.pathname ? "page" : undefined
+                          item.href === loc.pathname ? "page" : undefined
                         }
                       >
                         {item.name}
@@ -175,14 +164,6 @@ export default function LoggedInLayout() {
                           {user.email}
                         </div>
                       </div>
-                      <button
-                        type="button"
-                        className="relative ml-auto flex-shrink-0 rounded-full bg-gray-800 p-1 text-gray-400 hover:text-white focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800"
-                      >
-                        <span className="absolute -inset-1.5" />
-                        <span className="sr-only">View notifications</span>
-                        <BellIcon className="h-6 w-6" aria-hidden="true" />
-                      </button>
                     </div>
                     <div className="mt-3 space-y-1 px-2">
                       {userNavigation.map((item) => (
@@ -204,7 +185,8 @@ export default function LoggedInLayout() {
           <header className="py-10">
             <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
               <h1 className="text-3xl font-bold tracking-tight text-white">
-                Dashboard
+                {navigation.find((n) => n.href === loc.pathname)?.name ??
+                  "Weissteiner Familienkasse"}
               </h1>
             </div>
           </header>
