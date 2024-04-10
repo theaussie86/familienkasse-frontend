@@ -4,8 +4,6 @@ import { Bars3Icon, BellIcon, XMarkIcon } from "@heroicons/react/24/outline";
 import { classNames } from "../../util";
 import { useAuth } from "../../components/hooks/auth";
 import { Navigate } from "react-router-dom";
-import { useQuery } from "@tanstack/react-query";
-import { fetchCheckMessage } from "../../actions";
 
 const navigation = [
   { name: "Dashboard", href: "#", current: true },
@@ -16,20 +14,9 @@ const navigation = [
 ];
 
 export default function LoggedInLayout() {
-  const { user, logOut, idToken } = useAuth();
-  const { data } = useQuery({
-    queryKey: ["checkMessage"],
-    queryFn: fetchCheckMessage,
-    meta: { token: idToken },
-  });
+  const { user, logOut } = useAuth();
 
-  console.log(data);
-
-  const userNavigation = [
-    { name: "Your Profile", href: "#" },
-    { name: "Settings", href: "#" },
-    { name: "Sign out", onClick: () => logOut() },
-  ];
+  const userNavigation = [{ name: "Ausloggen", onClick: () => logOut() }];
   if (!user) return <Navigate to="/login" />;
   console.log(user);
 
@@ -109,16 +96,16 @@ export default function LoggedInLayout() {
                                 {userNavigation.map((item) => (
                                   <Menu.Item key={item.name}>
                                     {({ active }) => (
-                                      <a
-                                        href={item.href}
+                                      <button
+                                        type="button"
                                         onClick={item.onClick}
                                         className={classNames(
                                           active ? "bg-gray-100" : "",
-                                          "block px-4 py-2 text-sm text-gray-700"
+                                          "block w-full px-4 py-2 text-sm text-gray-700"
                                         )}
                                       >
                                         {item.name}
-                                      </a>
+                                      </button>
                                     )}
                                   </Menu.Item>
                                 ))}
@@ -199,8 +186,7 @@ export default function LoggedInLayout() {
                       {userNavigation.map((item) => (
                         <Disclosure.Button
                           key={item.name}
-                          as="a"
-                          href={item.href}
+                          as="button"
                           onClick={item.onClick}
                           className="block rounded-md px-3 py-2 text-base font-medium text-gray-400 hover:bg-gray-700 hover:text-white"
                         >
