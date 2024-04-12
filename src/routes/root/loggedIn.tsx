@@ -5,7 +5,10 @@ import { classNames } from "../../util";
 import { useAuth } from "../../components/hooks/auth";
 import { Link, Navigate, Outlet, useLocation } from "react-router-dom";
 
-const navigation = [{ name: "Dashboard", href: "/" }];
+const navigation = [
+  { name: "Dashboard", href: "/" },
+  { name: "Details", href: "/details" },
+];
 
 export default function LoggedInLayout() {
   const { user, logOut } = useAuth();

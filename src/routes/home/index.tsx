@@ -10,6 +10,7 @@ import { useAuth } from "../../components/hooks/auth";
 import { Transaction } from "../../types";
 import { formatCurrency, sumupAmounts } from "../../util";
 import WeissteinerTable from "../../components/table";
+import { Link } from "react-router-dom";
 
 function HomePage() {
   const { idToken } = useAuth();
@@ -113,13 +114,13 @@ function HomePage() {
 
                 <div className="absolute inset-x-0 bottom-0 bg-gray-50 px-4 py-4 sm:px-6">
                   <div className="text-sm">
-                    <a
-                      href="#"
+                    <Link
+                      to={`/details?account=${item.name}`}
                       className="font-medium text-indigo-600 hover:text-indigo-500"
                     >
                       Alle anzeigen
                       <span className="sr-only"> {item.name} stats</span>
-                    </a>
+                    </Link>
                   </div>
                 </div>
               </dd>
