@@ -2,7 +2,11 @@ import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/20/solid";
 import { Table } from "@tanstack/react-table";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export default function TablePagination({ table }: { table: Table<any> }) {
+export default function TablePagination<TData>({
+  table,
+}: {
+  table: Table<TData>;
+}) {
   return (
     <div className="flex items-center justify-between border-t border-gray-200 bg-white px-4 py-3 sm:px-6">
       <div className="flex flex-1 justify-between sm:hidden">

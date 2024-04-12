@@ -4,6 +4,7 @@ import {
   GiftIcon,
 } from "@heroicons/react/24/outline";
 import { useQuery } from "@tanstack/react-query";
+import { ColumnDef } from "@tanstack/react-table";
 import { fetchTransactions } from "../../actions";
 import { useAuth } from "../../components/hooks/auth";
 import { Transaction } from "../../types";
@@ -17,6 +18,38 @@ function HomePage() {
     queryFn: fetchTransactions,
     meta: { token: idToken },
   });
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const columns: ColumnDef<Transaction, any>[] = [
+    {
+      accessorKey: "created",
+      cell: (cell) =>
+        new Intl.DateTimeFormat("de-DE", {
+          dateStyle: "medium",
+          timeZone: "Europe/Berlin",
+        }).format(new Date(cell.getValue())),
+      header: "Datum",
+    },
+    {
+      accessorKey: "description",
+      cell: (cell) => cell.getValue(),
+      header: "Beschreibung",
+    },
+    {
+      accessorKey: "amount",
+      cell: (cell) =>
+        (cell.getValue() / 100).toLocaleString("de-DE", {
+          style: "currency",
+          currency: "EUR",
+        }),
+      header: "Betrag",
+    },
+    {
+      accessorKey: "account",
+      cell: (cell) => cell.getValue(),
+      header: "Konto",
+    },
+  ];
 
   const savings = transactions
     ?.filter((transaction) => transaction.account === "Sparen")
@@ -95,7 +128,15 @@ function HomePage() {
         </dl>
       </section>
       <section>
-        <WeissteinerTable />
+        <h3 className="text-base font-semibold leading-6 text-gray-900">
+          Letzten Transaktionen
+        </h3>
+        <WeissteinerTable
+          data={transactions ?? []}
+          columns={columns}
+          showPagination={false}
+          isSearchable={false}
+        />
       </section>
     </div>
   );
