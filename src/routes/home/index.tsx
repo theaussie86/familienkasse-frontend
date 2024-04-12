@@ -5,6 +5,16 @@ import { Transaction } from "../../types";
 import { baseStats, columns, formatCurrency, sumupAmounts } from "../../util";
 import WeissteinerTable from "../../components/table";
 import { Link } from "react-router-dom";
+import { Button } from "../../components/ui/button";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "../../components/ui/dialog";
+import CreateTransactionForm from "../../components/form/create-transaction";
 
 function HomePage() {
   const { idToken } = useAuth();
@@ -69,9 +79,26 @@ function HomePage() {
         </dl>
       </section>
       <section>
-        <h3 className="text-base font-semibold leading-6 text-gray-900">
-          Letzten Transaktionen
-        </h3>
+        <div className="flex justify-between">
+          <h3 className="text-base font-semibold leading-6 text-gray-900">
+            Letzten Transaktionen
+          </h3>
+          <Dialog>
+            <DialogTrigger asChild>
+              <Button variant="secondary" size="sm">
+                Neue Transaktion
+              </Button>
+            </DialogTrigger>
+            <DialogContent>
+              <DialogHeader>
+                <DialogTitle>Neue Transaktion erstellen</DialogTitle>
+                <DialogDescription asChild>
+                  <CreateTransactionForm />
+                </DialogDescription>
+              </DialogHeader>
+            </DialogContent>
+          </Dialog>
+        </div>
         <WeissteinerTable
           data={transactions ?? []}
           columns={columns}
