@@ -1,7 +1,7 @@
 export type Transaction = {
   _id: string;
   amount: number;
-  created: string;
+  created: Date;
   description: string;
   account: "Spenden" | "Sparen" | "Investieren";
 };

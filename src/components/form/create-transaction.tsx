@@ -18,14 +18,29 @@ import { CalendarIcon } from "@heroicons/react/24/outline";
 import { format } from "date-fns";
 import { cn } from "../../util";
 import { Calendar } from "../ui/calendar";
+import { useMutation } from "@tanstack/react-query";
+import { createTransaction } from "../../actions";
+import { useAuth } from "../hooks/auth";
 
 function CreateTransactionForm() {
+  const { idToken } = useAuth();
+  const addTransaction = useMutation({
+    mutationFn: createTransaction,
+  });
   const form = useForm<CreateTransactionSchema>({
     resolver: zodResolver(createTransactionSchema),
+    defaultValues: {
+      created: new Date(),
+      account: "Sparen",
+    },
   });
   const options = ["Sparen", "Spenden", "Investieren"];
   function onSubmit(data: CreateTransactionSchema) {
-    console.log(data);
+    addTransaction.mutate({
+      ...data,
+      amount: Number(data.amount) * 100,
+      idToken: idToken,
+    });
   }
   return (
     <Form {...form}>
