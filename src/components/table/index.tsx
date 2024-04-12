@@ -31,7 +31,9 @@ function WeissteinerTable<TData>({
   isSearchable?: boolean;
   showPagination?: boolean;
 }) {
-  const [sorting, setSorting] = useState<ColumnSort[]>([]);
+  const [sorting, setSorting] = useState<ColumnSort[]>([
+    { id: "created", desc: true },
+  ]);
   const [filter, setFilter] = useState<string>("");
 
   const table = useReactTable({

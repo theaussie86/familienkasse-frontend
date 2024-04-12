@@ -18,14 +18,19 @@ import { CalendarIcon } from "@heroicons/react/24/outline";
 import { format } from "date-fns";
 import { cn } from "../../util";
 import { Calendar } from "../ui/calendar";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { createTransaction } from "../../actions";
 import { useAuth } from "../hooks/auth";
+import { DialogClose } from "../ui/dialog";
 
 function CreateTransactionForm() {
   const { idToken } = useAuth();
+  const queryClient = useQueryClient();
   const addTransaction = useMutation({
     mutationFn: createTransaction,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["transactions"] });
+    },
   });
   const form = useForm<CreateTransactionSchema>({
     resolver: zodResolver(createTransactionSchema),
@@ -135,8 +140,9 @@ function CreateTransactionForm() {
             </FormItem>
           )}
         />
-
-        <Button type="submit">Speichern</Button>
+        <DialogClose asChild>
+          <Button type="submit">Speichern</Button>
+        </DialogClose>
       </form>
       <DevTool control={form.control} />
     </Form>
