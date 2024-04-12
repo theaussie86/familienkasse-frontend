@@ -32,8 +32,10 @@ export default function TablePagination({ table }: { table: Table<any> }) {
             </span>{" "}
             bis{" "}
             <span className="font-medium">
-              {(table.getState().pagination.pageIndex + 1) *
-                table.getState().pagination.pageSize}
+              {table.getCanNextPage()
+                ? (table.getState().pagination.pageIndex + 1) *
+                  table.getState().pagination.pageSize
+                : table.getRowCount()}
             </span>{" "}
             von <span className="font-medium">{table.getRowCount()}</span>{" "}
             Einträgen

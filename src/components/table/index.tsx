@@ -10,7 +10,7 @@ import {
 } from "@tanstack/react-table";
 
 function WeissteinerTable() {
-  const data = useMemo(() => mData, []);
+  const data = useMemo(() => mData.slice(0, 15), []);
 
   const columnHelper = createColumnHelper<(typeof data)[0]>();
 
