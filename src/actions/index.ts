@@ -49,3 +49,24 @@ export async function createTransaction(
   }
   return response.json();
 }
+
+export async function deleteTransaction(variables: {
+  _id: string;
+  idToken?: string | null;
+}) {
+  const { idToken, _id } = variables;
+  const response = await fetch(
+    `${import.meta.env.VITE_REST_API_URL}/transaction/${_id}`,
+    {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${idToken}`,
+      },
+    }
+  );
+  if (!response.ok) {
+    throw new Error("Network response was not ok");
+  }
+  return response.json();
+}
