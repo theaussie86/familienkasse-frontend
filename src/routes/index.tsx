@@ -3,6 +3,7 @@ import LoggedInLayout from "./root/loggedIn";
 import Login from "./login";
 import NotFoundPage from "./404";
 import HomePage from "./home";
+import DetailsPage from "./details";
 
 export const router = createBrowserRouter([
   {
@@ -15,7 +16,7 @@ export const router = createBrowserRouter([
       },
       {
         path: "details",
-        element: <div>Details Page</div>,
+        element: <DetailsPage />,
       },
     ],
   },
