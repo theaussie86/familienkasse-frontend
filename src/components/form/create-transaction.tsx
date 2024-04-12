@@ -50,7 +50,7 @@ function CreateTransactionForm() {
             <FormItem>
               <FormLabel>Betrag</FormLabel>
               <FormControl>
-                <Input {...field} />
+                <Input startAdornment={"€"} {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -95,7 +95,7 @@ function CreateTransactionForm() {
                     <Button
                       variant="outline"
                       className={cn(
-                        "w-[240px] pl-3 text-left font-normal",
+                        "w-full pl-3 text-left font-normal",
                         !field.value && "text-muted-foreground"
                       )}
                     >
