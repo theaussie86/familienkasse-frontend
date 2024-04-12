@@ -12,6 +12,7 @@ import {
 import { ChevronDownIcon, ChevronUpIcon } from "@heroicons/react/20/solid";
 import { useState } from "react";
 import { classNames } from "../../util";
+import { Input } from "../ui/input";
 
 const sortingMap = {
   asc: <ChevronUpIcon className="h-4 w-4" aria-hidden="true" />,
@@ -52,7 +53,7 @@ function WeissteinerTable<TData>({
     <>
       {isSearchable ? (
         <div className="mb-2 mt-5">
-          <input
+          <Input
             name="search"
             id="search"
             value={filter}
