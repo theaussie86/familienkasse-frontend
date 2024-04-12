@@ -2,8 +2,8 @@ import { z } from "zod";
 
 export const createTransactionSchema = z.object({
   description: z.string(),
-  amount: z.number(),
-  created: z.date(),
+  amount: z.coerce.number(),
+  created: z.coerce.date(),
   account: z.enum(["Sparen", "Spenden", "Investieren"]),
 });
 
