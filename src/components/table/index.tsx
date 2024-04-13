@@ -45,11 +45,12 @@ function WeissteinerTable<TData extends Transaction>({
   });
   const updateTransactionMutation = useMutation({
     mutationFn: updateTransaction,
-    // onSuccess: () => {
-    //   queryClient.invalidateQueries({
-    //     queryKey: ["transactions"],
-    //   });
-    // },
+    onSuccess: (data) => {
+      console.log(data);
+      queryClient.invalidateQueries({
+        queryKey: ["transactions"],
+      });
+    },
   });
   const [sorting, setSorting] = useState<ColumnSort[]>([
     { id: "created", desc: true },
