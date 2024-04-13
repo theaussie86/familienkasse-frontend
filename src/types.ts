@@ -4,4 +4,5 @@ export type Transaction = {
   created: Date;
   description: string;
   account: "Spenden" | "Sparen" | "Investieren";
+  isPaid: boolean;
 };

@@ -25,9 +25,10 @@ import {
   CommandGroup,
 } from "../ui/command";
 import { cn } from "../../util";
-import { format } from "date-fns";
+import { format, set } from "date-fns";
 import { de } from "date-fns/locale";
 import { Calendar } from "../ui/calendar";
+import { Checkbox } from "../ui/checkbox";
 
 declare module "@tanstack/react-table" {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -205,6 +206,28 @@ export const tableColumns = [
       );
     },
     header: "Konto",
+  }),
+  columnHelper.accessor("isPaid", {
+    header: "Bezahlt",
+    cell: ({ getValue, row, table }) => {
+      const initialValue = getValue();
+      // eslint-disable-next-line react-hooks/rules-of-hooks
+      const [value, setValue] = useState(initialValue);
+
+      const changeIsPaidFlag = (newValue: boolean) => {
+        setValue(newValue);
+        table.options.meta?.updateTransaction(row.original._id, {
+          isPaid: newValue,
+        });
+      };
+      return (
+        <Checkbox
+          name="isPaid"
+          checked={value}
+          onCheckedChange={changeIsPaidFlag}
+        />
+      );
+    },
   }),
   columnHelper.display({
     id: "actions",
