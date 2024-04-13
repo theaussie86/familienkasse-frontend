@@ -57,7 +57,6 @@ function WeissteinerTable<TData extends Transaction>({
   ]);
   const [filter, setFilter] = useState<string>("");
   const [search] = useSearchParams();
-  console.log(search.get("account"));
   const [columnFilters] = useState(() =>
     search.get("account")
       ? [{ id: "account", value: search.get("account") }]

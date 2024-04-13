@@ -30,6 +30,7 @@ export type AuthContext = {
   setLoading: (loading: boolean) => void;
   signIn: () => void;
   logOut: () => void;
+  refreshIdToken: () => void;
   idToken: string | null;
 };
 
@@ -44,7 +45,6 @@ const AuthProvider: FC<PropsWithChildren> = ({ children }) => {
     try {
       const credentials = await signInWithPopup(auth, provider);
       setUser(credentials.user);
-      console.log(credentials);
     } catch (error) {
       console.error(error);
     }
@@ -56,6 +56,17 @@ const AuthProvider: FC<PropsWithChildren> = ({ children }) => {
       setUser(null);
     } catch (error) {
       console.error(error);
+    }
+  };
+
+  const refreshIdToken = async () => {
+    if (user) {
+      try {
+        const freshIdToken = await user.getIdToken(true);
+        setIdToken(freshIdToken);
+      } catch (error) {
+        console.error(error);
+      }
     }
   };
 
@@ -76,7 +87,16 @@ const AuthProvider: FC<PropsWithChildren> = ({ children }) => {
 
   return (
     <AuthContext.Provider
-      value={{ user, setUser, loading, setLoading, signIn, logOut, idToken }}
+      value={{
+        user,
+        setUser,
+        loading,
+        setLoading,
+        signIn,
+        logOut,
+        idToken,
+        refreshIdToken,
+      }}
     >
       {children}
     </AuthContext.Provider>
