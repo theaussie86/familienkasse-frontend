@@ -1,5 +1,5 @@
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { deleteTransaction, fetchTransactions } from "../../actions";
+import { useQuery } from "@tanstack/react-query";
+import { fetchTransactions } from "../../actions";
 import { useAuth } from "../../components/hooks/auth";
 import { Transaction } from "../../types";
 import { baseStats, columns, formatCurrency, sumupAmounts } from "../../util";
@@ -15,21 +15,10 @@ import {
   DialogTrigger,
 } from "../../components/ui/dialog";
 import CreateTransactionForm from "../../components/form/create-transaction";
-import { TrashIcon } from "@heroicons/react/24/outline";
 
 function HomePage() {
   const { idToken } = useAuth();
-  const queryClient = useQueryClient();
-  const deleteTransactionMutation = useMutation({
-    mutationFn: deleteTransaction,
-    onSuccess: (data) => {
-      console.log("deleted", data);
-      queryClient.invalidateQueries({
-        queryKey: ["transactions"],
-        refetchType: "all",
-      });
-    },
-  });
+
   const { data: transactions } = useQuery<Transaction[]>({
     queryKey: ["transactions"],
     queryFn: fetchTransactions,
@@ -113,26 +102,7 @@ function HomePage() {
         </div>
         <WeissteinerTable
           data={transactions ?? []}
-          columns={[
-            ...columns,
-            {
-              id: "actions",
-              cell: ({ row }) => {
-                return (
-                  <button
-                    onClick={() => {
-                      deleteTransactionMutation.mutate({
-                        _id: row.original._id,
-                        idToken,
-                      });
-                    }}
-                  >
-                    <TrashIcon className="h-6 w-6 text-gray-500" />
-                  </button>
-                );
-              },
-            },
-          ]}
+          columns={columns}
           showPagination={false}
           isSearchable={false}
         />

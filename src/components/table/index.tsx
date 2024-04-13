@@ -13,6 +13,21 @@ import { ChevronDownIcon, ChevronUpIcon } from "@heroicons/react/20/solid";
 import { useState } from "react";
 import { classNames } from "../../util";
 import { Input } from "../ui/input";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { deleteTransaction } from "../../actions";
+import { useAuth } from "../hooks/auth";
+import { TrashIcon } from "@heroicons/react/24/outline";
+import { Button } from "../ui/button";
+import {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "../ui/dialog";
 
 const sortingMap = {
   asc: <ChevronUpIcon className="h-4 w-4" aria-hidden="true" />,
@@ -20,7 +35,7 @@ const sortingMap = {
   false: null,
 };
 
-function WeissteinerTable<TData>({
+function WeissteinerTable<TData extends { _id: string }>({
   data,
   columns,
   isSearchable = true,
@@ -31,6 +46,17 @@ function WeissteinerTable<TData>({
   isSearchable?: boolean;
   showPagination?: boolean;
 }) {
+  const { idToken } = useAuth();
+  const queryClient = useQueryClient();
+  const deleteTransactionMutation = useMutation({
+    mutationFn: deleteTransaction,
+    onSuccess: (data: unknown) => {
+      console.log("transaction deleted", data);
+      queryClient.invalidateQueries({
+        queryKey: ["transactions"],
+      });
+    },
+  });
   const [sorting, setSorting] = useState<ColumnSort[]>([
     { id: "created", desc: true },
   ]);
@@ -38,7 +64,50 @@ function WeissteinerTable<TData>({
 
   const table = useReactTable({
     data,
-    columns,
+    columns: [
+      ...columns,
+      {
+        id: "actions",
+        cell: ({ row }) => {
+          return (
+            <Dialog>
+              <DialogTrigger asChild>
+                <Button variant="ghost" size="sm">
+                  <TrashIcon className="h-6 w-6 text-gray-500" />
+                </Button>
+              </DialogTrigger>
+              <DialogContent>
+                <DialogHeader>
+                  <DialogTitle>Transaktion löschen</DialogTitle>
+                  <DialogDescription>
+                    Willst du diese Transaktion wirklich löschen? Diese Aktion
+                    kann nicht rückgängig gemacht werden.
+                  </DialogDescription>
+                </DialogHeader>
+                <DialogFooter>
+                  <Button
+                    variant="default"
+                    onClick={() => {
+                      deleteTransactionMutation.mutate({
+                        _id: row.original._id,
+                        idToken,
+                      });
+                    }}
+                  >
+                    Löschen
+                  </Button>
+                  <DialogClose asChild>
+                    <Button variant="outline" size="sm">
+                      Abbrechen
+                    </Button>
+                  </DialogClose>
+                </DialogFooter>
+              </DialogContent>
+            </Dialog>
+          );
+        },
+      },
+    ],
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
