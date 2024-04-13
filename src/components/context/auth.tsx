@@ -85,6 +85,18 @@ const AuthProvider: FC<PropsWithChildren> = ({ children }) => {
     return () => unsubscribe();
   }, []);
 
+  const MINUTE_MS = 30 * 60 * 1000;
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      user?.getIdToken(true).then((idToken) => {
+        setIdToken(idToken);
+      });
+    }, MINUTE_MS);
+
+    return () => clearInterval(interval); // This represents the unmount function, in which you need to clear your interval to prevent memory leaks.
+  }, [MINUTE_MS, user]);
+
   return (
     <AuthContext.Provider
       value={{

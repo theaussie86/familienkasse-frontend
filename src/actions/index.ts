@@ -23,9 +23,6 @@ export async function fetchTransactions(params: ContextType) {
       headers: { Authorization: `Bearer ${params.meta?.token}` },
     }
   );
-  if (!response.ok) {
-    throw new Error("Network response was not ok");
-  }
   return response.json();
 }
 
@@ -44,9 +41,6 @@ export async function createTransaction(
       body: JSON.stringify(params),
     }
   );
-  if (!response.ok) {
-    throw new Error("Network response was not ok");
-  }
   return response.json();
 }
 
@@ -65,9 +59,6 @@ export async function deleteTransaction(variables: {
       },
     }
   );
-  if (!response.ok) {
-    throw new Error("Network response was not ok");
-  }
   const data = await response.json();
   return data;
 }
@@ -89,9 +80,6 @@ export async function updateTransaction(variables: {
       body: JSON.stringify(updates),
     }
   );
-  if (!response.ok) {
-    throw new Error("Network response was not ok");
-  }
   const data = await response.json();
   return data;
 }
