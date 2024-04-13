@@ -1,7 +1,6 @@
 import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/20/solid";
 import { Table } from "@tanstack/react-table";
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export default function TablePagination<TData>({
   table,
 }: {

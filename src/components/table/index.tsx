@@ -7,7 +7,6 @@ import {
   getSortedRowModel,
   flexRender,
   ColumnSort,
-  ColumnDef,
 } from "@tanstack/react-table";
 import { ChevronDownIcon, ChevronUpIcon } from "@heroicons/react/20/solid";
 import { useState } from "react";
@@ -16,18 +15,8 @@ import { Input } from "../ui/input";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { deleteTransaction } from "../../actions";
 import { useAuth } from "../hooks/auth";
-import { TrashIcon } from "@heroicons/react/24/outline";
-import { Button } from "../ui/button";
-import {
-  Dialog,
-  DialogClose,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "../ui/dialog";
+import { tableColumns } from "./columns";
+import { Transaction } from "../../types";
 
 const sortingMap = {
   asc: <ChevronUpIcon className="h-4 w-4" aria-hidden="true" />,
@@ -35,14 +24,12 @@ const sortingMap = {
   false: null,
 };
 
-function WeissteinerTable<TData extends { _id: string }>({
+function WeissteinerTable<TData extends Transaction>({
   data,
-  columns,
   isSearchable = true,
   showPagination = true,
 }: {
   data: TData[];
-  columns: ColumnDef<TData>[];
   isSearchable?: boolean;
   showPagination?: boolean;
 }) {
@@ -50,8 +37,7 @@ function WeissteinerTable<TData extends { _id: string }>({
   const queryClient = useQueryClient();
   const deleteTransactionMutation = useMutation({
     mutationFn: deleteTransaction,
-    onSuccess: (data: unknown) => {
-      console.log("transaction deleted", data);
+    onSuccess: () => {
       queryClient.invalidateQueries({
         queryKey: ["transactions"],
       });
@@ -64,50 +50,7 @@ function WeissteinerTable<TData extends { _id: string }>({
 
   const table = useReactTable({
     data,
-    columns: [
-      ...columns,
-      {
-        id: "actions",
-        cell: ({ row }) => {
-          return (
-            <Dialog>
-              <DialogTrigger asChild>
-                <Button variant="ghost" size="sm">
-                  <TrashIcon className="h-6 w-6 text-gray-500" />
-                </Button>
-              </DialogTrigger>
-              <DialogContent>
-                <DialogHeader>
-                  <DialogTitle>Transaktion löschen</DialogTitle>
-                  <DialogDescription>
-                    Willst du diese Transaktion wirklich löschen? Diese Aktion
-                    kann nicht rückgängig gemacht werden.
-                  </DialogDescription>
-                </DialogHeader>
-                <DialogFooter>
-                  <Button
-                    variant="default"
-                    onClick={() => {
-                      deleteTransactionMutation.mutate({
-                        _id: row.original._id,
-                        idToken,
-                      });
-                    }}
-                  >
-                    Löschen
-                  </Button>
-                  <DialogClose asChild>
-                    <Button variant="outline" size="sm">
-                      Abbrechen
-                    </Button>
-                  </DialogClose>
-                </DialogFooter>
-              </DialogContent>
-            </Dialog>
-          );
-        },
-      },
-    ],
+    columns: tableColumns,
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
@@ -115,6 +58,10 @@ function WeissteinerTable<TData extends { _id: string }>({
     state: {
       globalFilter: filter,
       sorting,
+    },
+    meta: {
+      deleteTransaction: (_id: string) =>
+        deleteTransactionMutation.mutate({ _id, idToken }),
     },
     onSortingChange: setSorting,
     onGlobalFilterChange: setFilter,
@@ -171,10 +118,10 @@ function WeissteinerTable<TData extends { _id: string }>({
           </thead>
           <tbody className="divide-y divide-gray-200 bg-white">
             {table.getRowModel().rows.map((row) => (
-              <tr key={row.id}>
+              <tr key={row.original._id}>
                 {row.getVisibleCells().map((cell) => (
                   <td
-                    key={cell.id}
+                    key={`${cell.row.original._id}_${cell.id}`}
                     className="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6"
                   >
                     {flexRender(cell.column.columnDef.cell, cell.getContext())}

@@ -2,7 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import { fetchTransactions } from "../../actions";
 import { useAuth } from "../../components/hooks/auth";
 import { Transaction } from "../../types";
-import { baseStats, columns, formatCurrency, sumupAmounts } from "../../util";
+import { baseStats, formatCurrency, sumupAmounts } from "../../util";
 import WeissteinerTable from "../../components/table";
 import { Link } from "react-router-dom";
 import { Button } from "../../components/ui/button";
@@ -102,7 +102,6 @@ function HomePage() {
         </div>
         <WeissteinerTable
           data={transactions ?? []}
-          columns={columns}
           showPagination={false}
           isSearchable={false}
         />

@@ -69,6 +69,5 @@ export async function deleteTransaction(variables: {
     throw new Error("Network response was not ok");
   }
   const data = await response.json();
-  console.log("transaction deleted", data);
   return data;
 }
