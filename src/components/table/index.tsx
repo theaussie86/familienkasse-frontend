@@ -13,7 +13,7 @@ import { useState } from "react";
 import { classNames } from "../../util";
 import { Input } from "../ui/input";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { deleteTransaction } from "../../actions";
+import { deleteTransaction, updateTransaction } from "../../actions";
 import { useAuth } from "../hooks/auth";
 import { tableColumns } from "./columns";
 import { Transaction } from "../../types";
@@ -43,6 +43,14 @@ function WeissteinerTable<TData extends Transaction>({
       });
     },
   });
+  const updateTransactionMutation = useMutation({
+    mutationFn: updateTransaction,
+    // onSuccess: () => {
+    //   queryClient.invalidateQueries({
+    //     queryKey: ["transactions"],
+    //   });
+    // },
+  });
   const [sorting, setSorting] = useState<ColumnSort[]>([
     { id: "created", desc: true },
   ]);
@@ -62,6 +70,8 @@ function WeissteinerTable<TData extends Transaction>({
     meta: {
       deleteTransaction: (_id: string) =>
         deleteTransactionMutation.mutate({ _id, idToken }),
+      updateTransaction: (_id: string, data: Partial<Transaction>) =>
+        updateTransactionMutation.mutate({ _id, data, idToken }),
     },
     onSortingChange: setSorting,
     onGlobalFilterChange: setFilter,

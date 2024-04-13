@@ -12,11 +12,15 @@ import {
 } from "../ui/dialog";
 import { Button } from "../ui/button";
 import { TrashIcon } from "lucide-react";
+import { Input } from "../ui/input";
+import { useState } from "react";
+import { formatCurrency } from "../../util";
 
 declare module "@tanstack/react-table" {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   interface TableMeta<TData extends Transaction> {
     deleteTransaction: (_id: string) => void;
+    updateTransaction: (_id: string, data: Partial<Transaction>) => void;
   }
 }
 
@@ -32,15 +36,52 @@ export const tableColumns = [
     header: "Datum",
   }),
   columnHelper.accessor("description", {
-    cell: (cell) => cell.getValue(),
+    cell: ({ getValue, row, table }) => {
+      const initialValue = getValue();
+      // eslint-disable-next-line react-hooks/rules-of-hooks
+      const [value, setValue] = useState(initialValue);
+
+      const onBlur = () => {
+        if (value !== initialValue) {
+          table.options.meta?.updateTransaction(row.original._id, {
+            description: value,
+          });
+        }
+      };
+      return (
+        <Input
+          value={value}
+          onChange={(e) => setValue(e.target.value)}
+          onBlur={onBlur}
+        />
+      );
+    },
     header: "Beschreibung",
   }),
   columnHelper.accessor("amount", {
-    cell: (cell) =>
-      (cell.getValue() / 100).toLocaleString("de-DE", {
-        style: "currency",
-        currency: "EUR",
-      }),
+    cell: ({ getValue, row, table }) => {
+      const initialValue = getValue();
+      // eslint-disable-next-line react-hooks/rules-of-hooks
+      const [value, setValue] = useState(initialValue / 100);
+
+      const onBlur = () => {
+        if (value !== initialValue) {
+          table.options.meta?.updateTransaction(row.original._id, {
+            amount: value * 100,
+          });
+        }
+      };
+      return (
+        <Input
+          startAdornment="€"
+          type="number"
+          step="0.01"
+          value={value}
+          onChange={(e) => setValue(parseFloat(e.target.value))}
+          onBlur={onBlur}
+        />
+      );
+    },
     header: "Betrag",
   }),
   columnHelper.accessor("account", {

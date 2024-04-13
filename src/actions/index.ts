@@ -71,3 +71,27 @@ export async function deleteTransaction(variables: {
   const data = await response.json();
   return data;
 }
+
+export async function updateTransaction(variables: {
+  _id: string;
+  data: Partial<Transaction>;
+  idToken?: string | null;
+}) {
+  const { idToken, _id, data: updates } = variables;
+  const response = await fetch(
+    `${import.meta.env.VITE_REST_API_URL}/transaction/${_id}`,
+    {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${idToken}`,
+      },
+      body: JSON.stringify(updates),
+    }
+  );
+  if (!response.ok) {
+    throw new Error("Network response was not ok");
+  }
+  const data = await response.json();
+  return data;
+}
