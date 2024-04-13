@@ -11,7 +11,7 @@ import {
   DialogTrigger,
 } from "../ui/dialog";
 import { Button } from "../ui/button";
-import { Check, TrashIcon } from "lucide-react";
+import { CalendarIcon, Check, TrashIcon } from "lucide-react";
 import { Input } from "../ui/input";
 import { useState } from "react";
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
@@ -25,6 +25,9 @@ import {
   CommandGroup,
 } from "../ui/command";
 import { cn } from "../../util";
+import { format } from "date-fns";
+import { de } from "date-fns/locale";
+import { Calendar } from "../ui/calendar";
 
 declare module "@tanstack/react-table" {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -38,11 +41,54 @@ const columnHelper = createColumnHelper<Transaction>();
 
 export const tableColumns = [
   columnHelper.accessor("created", {
-    cell: (cell) =>
-      new Intl.DateTimeFormat("de-DE", {
-        dateStyle: "medium",
-        timeZone: "Europe/Berlin",
-      }).format(new Date(cell.getValue())),
+    cell: ({ getValue, row, table }) => {
+      const initialValue = getValue();
+      // eslint-disable-next-line react-hooks/rules-of-hooks
+      const [date, setDate] = useState(initialValue);
+      // eslint-disable-next-line react-hooks/rules-of-hooks
+      const [open, setOpen] = useState(false);
+
+      const changeDate = (newDate: Date) => {
+        table.options.meta?.updateTransaction(row.original._id, {
+          created: newDate,
+        });
+      };
+      return (
+        <Popover open={open} onOpenChange={setOpen}>
+          <PopoverTrigger asChild>
+            <Button
+              variant={"outline"}
+              className={cn(
+                "w-[280px] justify-start text-left font-normal",
+                !date && "text-muted-foreground"
+              )}
+            >
+              <CalendarIcon className="mr-2 h-4 w-4" />
+              {date ? (
+                format(date, "PPP", { locale: de })
+              ) : (
+                <span>Wähle ein Datum</span>
+              )}
+            </Button>
+          </PopoverTrigger>
+          <PopoverContent className="w-auto p-0">
+            <Calendar
+              mode="single"
+              locale={de}
+              selected={date}
+              onSelect={(d) => {
+                if (d) {
+                  setDate(d);
+                  changeDate(d);
+                }
+                setOpen(false);
+              }}
+              initialFocus
+            />
+          </PopoverContent>
+        </Popover>
+      );
+    },
     header: "Datum",
   }),
   columnHelper.accessor("description", {

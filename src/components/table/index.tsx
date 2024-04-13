@@ -45,8 +45,7 @@ function WeissteinerTable<TData extends Transaction>({
   });
   const updateTransactionMutation = useMutation({
     mutationFn: updateTransaction,
-    onSuccess: (data) => {
-      console.log(data);
+    onSuccess: () => {
       queryClient.invalidateQueries({
         queryKey: ["transactions"],
       });
