@@ -17,6 +17,7 @@ import { deleteTransaction, updateTransaction } from "../../actions";
 import { useAuth } from "../hooks/auth";
 import { tableColumns } from "./columns";
 import { Transaction } from "../../types";
+import { useSearchParams } from "react-router-dom";
 
 const sortingMap = {
   asc: <ChevronUpIcon className="h-4 w-4" aria-hidden="true" />,
@@ -55,6 +56,13 @@ function WeissteinerTable<TData extends Transaction>({
     { id: "created", desc: true },
   ]);
   const [filter, setFilter] = useState<string>("");
+  const [search] = useSearchParams();
+  console.log(search.get("account"));
+  const [columnFilters] = useState(() =>
+    search.get("account")
+      ? [{ id: "account", value: search.get("account") }]
+      : []
+  );
 
   const table = useReactTable({
     data,
@@ -65,6 +73,7 @@ function WeissteinerTable<TData extends Transaction>({
     getSortedRowModel: getSortedRowModel(),
     state: {
       globalFilter: filter,
+      columnFilters,
       sorting,
     },
     meta: {
