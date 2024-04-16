@@ -144,7 +144,7 @@ function CreateTransactionForm() {
           <Button type="submit">Speichern</Button>
         </DialogClose>
       </form>
-      <DevTool control={form.control} />
+      {import.meta.env.DEV ? <DevTool control={form.control} /> : null}
     </Form>
   );
 }
