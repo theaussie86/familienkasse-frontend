@@ -1,7 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { fetchTransactions } from "../../actions";
 import { useAuth } from "../../components/hooks/auth";
-import { Transaction } from "../../types";
 import { baseStats, formatCurrency, sumupAmounts } from "../../util";
 import WeissteinerTable from "../../components/table";
 import { Link } from "react-router-dom";
@@ -15,11 +14,12 @@ import {
   DialogTrigger,
 } from "../../components/ui/dialog";
 import CreateTransactionForm from "../../components/form/create-transaction";
+import { CreateTransactionSchema } from "../../components/form/schema";
 
 function HomePage() {
   const { idToken } = useAuth();
 
-  const { data: transactions } = useQuery<Transaction[]>({
+  const { data: transactions } = useQuery<CreateTransactionSchema[]>({
     queryKey: ["transactions"],
     queryFn: fetchTransactions,
     meta: { token: idToken },

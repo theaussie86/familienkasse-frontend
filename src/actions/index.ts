@@ -1,4 +1,4 @@
-import { Transaction } from "../types";
+import { CreateTransactionSchema } from "../components/form/schema";
 
 export type ContextType = {
   meta?: Record<string, unknown>;
@@ -27,7 +27,7 @@ export async function fetchTransactions(params: ContextType) {
 }
 
 export async function createTransaction(
-  variables: Omit<Transaction, "_id"> & { idToken?: string | null }
+  variables: CreateTransactionSchema & { idToken?: string | null }
 ) {
   const { idToken, ...params } = variables;
   const response = await fetch(
@@ -64,8 +64,8 @@ export async function deleteTransaction(variables: {
 }
 
 export async function updateTransaction(variables: {
-  _id: string;
-  data: Partial<Transaction>;
+  _id: CreateTransactionSchema["_id"];
+  data: Partial<CreateTransactionSchema>;
   idToken?: string | null;
 }) {
   const { idToken, _id, data: updates } = variables;

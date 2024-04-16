@@ -1,16 +1,16 @@
 import { useQuery } from "@tanstack/react-query";
 import { fetchTransactions } from "../../actions";
 import { useAuth } from "../../components/hooks/auth";
-import { Transaction } from "../../types";
 import { baseStats, formatCurrency, sumupAmounts } from "../../util";
 import WeissteinerTable from "../../components/table";
 import { useSearchParams } from "react-router-dom";
+import { CreateTransactionSchema } from "../../components/form/schema";
 
 function DetailsPage() {
   const { idToken } = useAuth();
   const [searchParams] = useSearchParams();
   const account = searchParams.get("account");
-  const { data: transactions } = useQuery<Transaction[]>({
+  const { data: transactions } = useQuery<CreateTransactionSchema[]>({
     queryKey: ["transactions"],
     queryFn: fetchTransactions,
     meta: { token: idToken },

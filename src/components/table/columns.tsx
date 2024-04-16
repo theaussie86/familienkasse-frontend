@@ -1,5 +1,3 @@
-import { createColumnHelper } from "@tanstack/react-table";
-import { Transaction } from "../../types";
 import {
   Dialog,
   DialogClose,
@@ -25,20 +23,14 @@ import {
   CommandGroup,
 } from "../ui/command";
 import { cn } from "../../util";
-import { format, set } from "date-fns";
+import { format } from "date-fns";
 import { de } from "date-fns/locale";
 import { Calendar } from "../ui/calendar";
 import { Checkbox } from "../ui/checkbox";
+import { CreateTransactionSchema } from "../form/schema";
+import { createColumnHelper } from "@tanstack/react-table";
 
-declare module "@tanstack/react-table" {
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  interface TableMeta<TData extends Transaction> {
-    deleteTransaction: (_id: string) => void;
-    updateTransaction: (_id: string, data: Partial<Transaction>) => void;
-  }
-}
-
-const columnHelper = createColumnHelper<Transaction>();
+const columnHelper = createColumnHelper<CreateTransactionSchema>();
 
 export const tableColumns = [
   columnHelper.accessor("created", {

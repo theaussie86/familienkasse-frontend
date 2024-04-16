@@ -10,14 +10,16 @@ import {
   ChartBarIcon,
   GiftIcon,
 } from "@heroicons/react/24/outline";
-import { Transaction } from "./types";
+import { CreateTransactionSchema } from "./components/form/schema";
 
 export function classNames(...classes: (string | boolean | undefined)[]) {
   return classes.filter(Boolean).join(" ");
 }
 
-export const sumupAmounts = (acc: number, transaction: Transaction) =>
-  acc + transaction.amount;
+export const sumupAmounts = (
+  acc: number,
+  transaction: CreateTransactionSchema
+) => acc + transaction.amount;
 
 export const formatCurrency = (value: number | undefined) => {
   return (

@@ -16,8 +16,8 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { deleteTransaction, updateTransaction } from "../../actions";
 import { useAuth } from "../hooks/auth";
 import { tableColumns } from "./columns";
-import { Transaction } from "../../types";
 import { useSearchParams } from "react-router-dom";
+import { CreateTransactionSchema } from "../form/schema";
 
 const sortingMap = {
   asc: <ChevronUpIcon className="h-4 w-4" aria-hidden="true" />,
@@ -25,7 +25,7 @@ const sortingMap = {
   false: null,
 };
 
-function WeissteinerTable<TData extends Transaction>({
+function WeissteinerTable<TData extends CreateTransactionSchema>({
   data,
   isSearchable = true,
   showPagination = true,
@@ -76,10 +76,10 @@ function WeissteinerTable<TData extends Transaction>({
       sorting,
     },
     meta: {
-      deleteTransaction: (_id: string) =>
-        deleteTransactionMutation.mutate({ _id, idToken }),
-      updateTransaction: (_id: string, data: Partial<Transaction>) =>
-        updateTransactionMutation.mutate({ _id, data, idToken }),
+      deleteTransaction: (_id) =>
+        _id && deleteTransactionMutation.mutate({ _id, idToken }),
+      updateTransaction: (_id, data) =>
+        _id && updateTransactionMutation.mutate({ _id, data, idToken }),
     },
     onSortingChange: setSorting,
     onGlobalFilterChange: setFilter,
