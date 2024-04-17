@@ -5,6 +5,7 @@ import { baseStats, formatCurrency, sumupAmounts } from "../../util";
 import WeissteinerTable from "../../components/table";
 import { useSearchParams } from "react-router-dom";
 import { CreateTransactionSchema } from "../../components/form/schema";
+import StatCard from "../../components/stat";
 
 function DetailsPage() {
   const { idToken } = useAuth();
@@ -19,9 +20,17 @@ function DetailsPage() {
   const stat = baseStats
     ?.map((stat) => ({
       ...stat,
-      stat: formatCurrency(
+      target: formatCurrency(
         transactions
           ?.filter((transaction) => transaction.account === stat.name)
+          .reduce(sumupAmounts, 0)
+      ),
+      actual: formatCurrency(
+        transactions
+          ?.filter(
+            (transaction) =>
+              transaction.account === stat.name && transaction.isPaid === true
+          )
           .reduce(sumupAmounts, 0)
       ),
     }))
@@ -32,29 +41,7 @@ function DetailsPage() {
       <section>
         {stat ? (
           <dl className="mt-5 grid grid-cols-1 gap-5">
-            <div
-              key={stat?.id}
-              className="relative overflow-hidden rounded-lg bg-white px-4 pb-12 pt-5 shadow sm:px-6 sm:pt-6"
-            >
-              <dt>
-                <div className="absolute rounded-md bg-indigo-500 p-3">
-                  {stat && (
-                    <stat.icon
-                      className="h-6 w-6 text-white"
-                      aria-hidden="true"
-                    />
-                  )}
-                </div>
-                <p className="ml-16 truncate text-sm font-medium text-gray-500">
-                  {stat?.name}
-                </p>
-              </dt>
-              <dd className="ml-16 flex items-baseline pb-6 sm:pb-7">
-                <p className="text-2xl font-semibold text-gray-900">
-                  {stat?.stat}
-                </p>
-              </dd>
-            </div>
+            <StatCard item={stat} hasLink={false} />
           </dl>
         ) : (
           <h3 className="text-base font-semibold leading-6 text-gray-900">

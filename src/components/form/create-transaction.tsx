@@ -16,6 +16,7 @@ import { RadioGroup, RadioGroupItem } from "../ui/radio-group";
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
 import { CalendarIcon } from "@heroicons/react/24/outline";
 import { format } from "date-fns";
+import { de } from "date-fns/locale";
 import { cn } from "../../util";
 import { Calendar } from "../ui/calendar";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
@@ -120,7 +121,7 @@ function CreateTransactionForm() {
                       )}
                     >
                       {field.value ? (
-                        format(field.value, "PPP")
+                        format(field.value, "PPP", { locale: de })
                       ) : (
                         <span>Datum auswählen</span>
                       )}

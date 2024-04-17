@@ -102,7 +102,7 @@ function WeissteinerTable<TData extends CreateTransactionSchema>({
       <div
         className={classNames(
           isSearchable ? "mt-2" : "mt-5",
-          "overflow-hidden shadow ring-1 ring-black ring-opacity-5 sm:rounded-lg"
+          "overflow-x-auto shadow ring-1 ring-black ring-opacity-5 sm:rounded-lg"
         )}
       >
         <table className="min-w-full divide-y divide-gray-300">
@@ -113,7 +113,7 @@ function WeissteinerTable<TData extends CreateTransactionSchema>({
                   <th
                     key={column.id}
                     scope="col"
-                    className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6 hover:cursor-pointer"
+                    className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6 hover:cursor-pointer min-w-24"
                     onClick={column.column.getToggleSortingHandler()}
                   >
                     <span className="flex gap-2">

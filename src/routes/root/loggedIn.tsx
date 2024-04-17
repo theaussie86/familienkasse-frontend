@@ -134,8 +134,8 @@ export default function LoggedInLayout() {
                     {navigation.map((item) => (
                       <Disclosure.Button
                         key={item.name}
-                        as="a"
-                        href={item.href}
+                        as={Link}
+                        to={item.href}
                         className={classNames(
                           item.href === loc.pathname
                             ? "bg-gray-900 text-white"
